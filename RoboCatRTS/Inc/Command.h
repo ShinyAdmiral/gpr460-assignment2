@@ -5,7 +5,8 @@ public:
 	{
 		CM_INVALID,
 		CM_ATTACK,
-		CM_MOVE
+		CM_MOVE,
+		CM_MEOW
 	};
 
 	Command() :
@@ -79,3 +80,25 @@ protected:
 };
 
 typedef shared_ptr< MoveCommand > MoveCommandPtr;
+
+class MeowCommand : public Command
+{
+public:
+	MeowCommand()
+	{
+		mCommandType = CM_MEOW;
+	}
+
+	static shared_ptr< MeowCommand > StaticCreate(uint32_t inNetworkId, const Vector3& inTarget);
+
+	virtual void Write(OutputMemoryBitStream& inOutputStream) override;
+
+	virtual void ProcessCommand() override;
+
+protected:
+	virtual void Read(InputMemoryBitStream& inInputStream) override;
+
+	Vector3 mTarget;
+};
+
+typedef shared_ptr< MeowCommand > MeowCommandPtr;
