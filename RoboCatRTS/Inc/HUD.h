@@ -1,6 +1,13 @@
 //I take care of rendering things!
 
 #include <SDL_ttf.h>
+#include <vector>
+
+struct Meow 
+{
+	Vector3 pos;
+	int time;
+};
 
 class HUD
 {
@@ -13,6 +20,8 @@ public:
 
 	void			SetPlayerHealth( int inHealth )	{ mHealth = inHealth; }
 
+	void			AddMeow(Vector3 pos, int time);
+
 private:
 
 	HUD();
@@ -22,6 +31,7 @@ private:
 	void	RenderScoreBoard();
 	void	RenderHealth();
 	void	RenderCountdown();
+	void	RenderMeow();
 	void	RenderText( const string& inStr, const Vector3& origin, const Vector3& inColor );
 
 	Vector3										mBandwidthOrigin;
@@ -31,6 +41,7 @@ private:
 	Vector3										mHealthOffset;
 	Vector3										mTimeOrigin;
 	SDL_Rect									mViewTransform;
+	std::vector<Meow>							mMeows;
 
 	TTF_Font*									mFont;
 	int											mHealth;

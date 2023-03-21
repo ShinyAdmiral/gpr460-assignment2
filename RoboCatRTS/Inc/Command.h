@@ -6,7 +6,9 @@ public:
 		CM_INVALID,
 		CM_ATTACK,
 		CM_MOVE,
-		CM_MEOW
+		CM_MEOW,
+		CM_BUILD,
+		CM_SWITCH
 	};
 
 	Command() :
@@ -89,7 +91,29 @@ public:
 		mCommandType = CM_MEOW;
 	}
 
-	static shared_ptr< MeowCommand > StaticCreate(uint32_t inNetworkId, const Vector3& inTarget);
+	static shared_ptr< MeowCommand > StaticCreate(uint32_t inNetworkId, int time);
+
+	virtual void Write(OutputMemoryBitStream& inOutputStream) override;
+
+	virtual void ProcessCommand() override;
+
+protected:
+	virtual void Read(InputMemoryBitStream& inInputStream) override;
+
+	int mTime;
+};
+
+typedef shared_ptr< MeowCommand > MeowCommandPtr;
+
+class BuildCommand : public Command
+{
+public:
+	BuildCommand()
+	{
+		mCommandType = CM_BUILD;
+	}
+
+	static shared_ptr< BuildCommand > StaticCreate(const Vector3& inTarget);
 
 	virtual void Write(OutputMemoryBitStream& inOutputStream) override;
 
@@ -101,4 +125,26 @@ protected:
 	Vector3 mTarget;
 };
 
-typedef shared_ptr< MeowCommand > MeowCommandPtr;
+typedef shared_ptr< BuildCommand > BuildCommandPtr;
+
+class SwitchCommand : public Command
+{
+public:
+	SwitchCommand()
+	{
+		mCommandType = CM_SWITCH;
+	}
+
+	static shared_ptr< SwitchCommand > StaticCreate(uint32_t inNetworkId);
+
+	virtual void Write(OutputMemoryBitStream& inOutputStream) override;
+
+	virtual void ProcessCommand() override;
+
+protected:
+	virtual void Read(InputMemoryBitStream& inInputStream) override;
+
+	uint32_t mNewID;
+};
+
+typedef shared_ptr< SwitchCommand > SwitchCommandPtr;

@@ -40,6 +40,7 @@ void HUD::Render()
 	RenderScoreBoard();
 	RenderHealth();
 	RenderCountdown();
+	RenderMeow();
 }
 
 void HUD::RenderHealth()
@@ -128,4 +129,29 @@ void HUD::RenderText( const string& inStr, const Vector3& origin, const Vector3&
 	// Destroy the surface/texture
 	SDL_DestroyTexture( texture );
 	SDL_FreeSurface( surface );
+}
+
+void HUD::RenderMeow() 
+{
+	size_t size = mMeows.size();
+
+	for (int i = size - 1; i >= 0; i--)
+	{
+		RenderText("Meow", mMeows[i].pos, Colors::White);
+		mMeows[i].time--;
+
+		if (mMeows[i].time < 0)
+		{
+			mMeows.erase(mMeows.begin() + i);
+			break;
+		}
+	}
+}
+
+void HUD::AddMeow(Vector3 pos, int time)
+{
+	Meow meow;
+	meow.pos = pos;
+	meow.time = time;
+	mMeows.push_back(meow);
 }

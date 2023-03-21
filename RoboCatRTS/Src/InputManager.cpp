@@ -9,6 +9,25 @@ void InputManager::StaticInit()
 
 void InputManager::HandleInput( EInputAction inInputAction, int inKeyCode )
 {
+	//meow command. Did it this way cause math
+	if (inKeyCode >= '1' && inKeyCode <= '9') 
+	{
+		if (mSelectedNetId > 0)
+		{
+			int time = (inKeyCode - 48) * 10;
+			
+			CommandPtr cmd;
+			cmd = MeowCommand::StaticCreate(mSelectedNetId, time);
+
+			if (cmd)
+			{
+				mCommandList.AddCommand(cmd);
+			}
+		}
+
+		return;
+	}
+
 	switch( inKeyCode )
 	{
 	case '+':
@@ -34,6 +53,20 @@ void InputManager::HandleInput( EInputAction inInputAction, int inKeyCode )
 			NetworkManager::sInstance->SetSimulatedLatency( latency );
 			break;
 		}
+	case 's':
+	{
+		if (mSelectedNetId > 0)
+		{
+			CommandPtr cmd;
+			cmd = SwitchCommand::StaticCreate(mSelectedNetId);
+
+			if (cmd)
+			{
+				mCommandList.AddCommand(cmd);
+			}
+		}
+		break;
+	}
 	case SDLK_RETURN:
 		//start the game!
 		NetworkManager::sInstance->TryStartGame();
@@ -56,6 +89,9 @@ void InputManager::HandleMouseClick( int32_t inX, int32_t inY, uint8_t button )
 		break;
 	case SDL_BUTTON_RIGHT:
 		GenerateRightClickCommand( Vector3( worldX, worldY, 0.0f ) );
+		break;
+	case SDL_BUTTON_MIDDLE:
+		GenerateMiddleClickCommand(Vector3(worldX, worldY, 0.0f));
 		break;
 	default:
 		break;
@@ -87,6 +123,22 @@ void InputManager::GenerateRightClickCommand( const Vector3& inWorldPos )
 		}
 	}
 }
+
+void InputManager::GenerateMiddleClickCommand(const Vector3& inWorldPos)
+{
+	if (mSelectedNetId <= 0)
+	{
+		//send cords for new spawn
+		CommandPtr cmd;
+		cmd = BuildCommand::StaticCreate(inWorldPos);
+
+		if (cmd)
+		{
+			mCommandList.AddCommand(cmd);
+		}
+	}
+}
+
 
 InputManager::InputManager() :
 mSelectedNetId( 0 )
