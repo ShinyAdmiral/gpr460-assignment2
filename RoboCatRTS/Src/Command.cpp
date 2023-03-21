@@ -27,7 +27,7 @@ shared_ptr< Command > Command::StaticReadAndCreate( InputMemoryBitStream& inInpu
 		retVal->Read( inInputStream );
 		break;
 	case CM_MEOW:
-		retVal = std::make_shared< SwitchCommand >();
+		retVal = std::make_shared< MeowCommand >();
 		retVal->mNetworkId = networkId;
 		retVal->mPlayerId = playerId;
 		retVal->Read(inInputStream);
@@ -142,6 +142,8 @@ void MoveCommand::Read( InputMemoryBitStream& inInputStream )
 	inInputStream.Read( mTarget );
 }
 
+
+
 MeowCommandPtr MeowCommand::StaticCreate(uint32_t inNetworkId, int time)
 {
 	MeowCommandPtr retVal;
@@ -169,14 +171,21 @@ void MeowCommand::Write(OutputMemoryBitStream& inOutputStream)
 void MeowCommand::ProcessCommand()
 {
 	//make an offset for the meow
-	Vector3 Offset = Vector3(0, 50, 0);
+	Vector3 offset = Vector3(-30, -100, 0);
+	float scale = 100;
 
 	GameObjectPtr obj = NetworkManager::sInstance->GetGameObject(mNetworkId);
 	if (obj && obj->GetClassId() == RoboCat::kClassId &&
 		obj->GetPlayerId() == mPlayerId)
 	{
 		RoboCat* rc = obj->GetAsCat();
-		HUD::sInstance->AddMeow(rc->GetLocation() + Offset, mTime);
+		Vector3 pos = rc->GetLocation();
+
+		//conversion to screen space
+		pos += Vector3(6.5, 3.5, 0);
+		pos *= scale;
+		pos += offset;
+		HUD::sInstance->AddMeow(pos, mTime);
 	}
 }
 

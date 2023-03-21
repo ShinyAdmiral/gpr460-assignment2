@@ -10,7 +10,7 @@ void InputManager::StaticInit()
 void InputManager::HandleInput( EInputAction inInputAction, int inKeyCode )
 {
 	//meow command. Did it this way cause math
-	if (inKeyCode >= '1' && inKeyCode <= '9') 
+	if (inKeyCode >= '1' && inKeyCode <= '9' && inInputAction == EInputAction::EIA_Pressed)
 	{
 		if (mSelectedNetId > 0)
 		{

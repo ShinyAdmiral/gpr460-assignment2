@@ -13,6 +13,10 @@ RenderManager::RenderManager()
 	mViewTransform.h = static_cast<int>( kWorldZoomFactor );
 }
 
+int RenderManager::GetRenderWidth()
+{
+	return mViewTransform.w;
+}
 
 void RenderManager::StaticInit()
 {

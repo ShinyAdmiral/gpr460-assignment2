@@ -15,6 +15,8 @@ public:
 	void RemoveComponent( SpriteComponent* inComponent );
 	int	 GetComponentIndex( SpriteComponent* inComponent ) const;
 
+	int GetRenderWidth();
+
 private:
 
 	RenderManager();

@@ -143,7 +143,6 @@ void HUD::RenderMeow()
 		if (mMeows[i].time < 0)
 		{
 			mMeows.erase(mMeows.begin() + i);
-			break;
 		}
 	}
 }
